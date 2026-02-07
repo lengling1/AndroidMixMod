@@ -590,6 +590,12 @@
   {
     "$type": "Generator.OffsetLines.TextLine, Generator",
     "Section": 0,
+    "Text": "DeviceLocaleHelper_GetConnectionDataFromRegionId_Offset",
+    "Name": "DeviceLocaleHelper$$GetConnectionDataFromRegionId"
+  },
+  {
+    "$type": "Generator.OffsetLines.TextLine, Generator",
+    "Section": 0,
     "Text": "UnityEngine_Application_OpenURL_Offset",
     "Name": "UnityEngine.Application$$OpenURL"
   },
