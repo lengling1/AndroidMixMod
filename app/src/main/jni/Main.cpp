@@ -798,6 +798,8 @@ void hack_thread() {
 
     il2cpp::Localization_GetLocaleName = reinterpret_cast<System_String_o * (*)()>(getAbsoluteAddress(targetLibName, Localization_GetLocaleName_Offset));
 
+    il2cpp::DeviceLocaleHelper_GetConnectionDataFromRegionId = reinterpret_cast<DeviceLocaleData_ConnectionData_o (*)(int, bool)>(getAbsoluteAddress(targetLibName, DeviceLocaleHelper_GetConnectionDataFromRegionId_Offset));
+
     HOOK(targetLibName, HearthstoneApplication_Awake_Offset, HearthstoneApplication_Awake, il2cpp::HearthstoneApplication_Awake);
 
     HOOK(targetLibName, Time_set_timeScale_Offset, Time_set_timeScale, il2cpp::Time_set_timeScale);
