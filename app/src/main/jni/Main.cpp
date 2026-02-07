@@ -30,6 +30,7 @@ std::string language = "enUS";
 bool languageLoaded = false;
 bool useDefaultLanguage = true;
 bool timeScaleEnabled = false, timeScaleInGameOnlyEnabled = false, gameStarted = false, emoteSpamBlocker = false, disableThinkEmotes = false, copySelectedBattleTag = false, gameLoaded = false;
+bool redirectToCNServer = false; // Redirect international server to CN server
 float originalTimeScale = 1, timeScale = 1, m_lastEnemyEmoteTime;
 int emotesBeforeBlock = 0, m_lastPlayerId, m_chainedEnemyEmotes;
 CardState golden, diamond, signature;
@@ -73,6 +74,8 @@ jobjectArray GetFeatureList(JNIEnv *env, jobject context) {
             localization[language][DEVICE_NAME],
             /*"Category_Others",
             localization[language][MOVE_ENEMY_CARDS],*/
+            "Category_Server",
+            "Toggle_Redirect to CN Server",
             "Category_Shortcuts",
             localization[language][COPY_BATTLETAG],
             localization[language][COPY_BATTLETAG_ON_BATTLEGROUNDS],
@@ -439,6 +442,24 @@ bool UpdateUtils_OpenAppStore() {
     return true;
 }
 
+// Hook DeviceLocaleHelper::GetConnectionDataFromRegionId to redirect to CN server
+DeviceLocaleData_ConnectionData_o DeviceLocaleHelper_GetConnectionDataFromRegionId(int region, bool isDev) {
+    // Call original function
+    auto result = il2cpp::DeviceLocaleHelper_GetConnectionDataFromRegionId(region, isDev);
+    
+    // If CN server redirect is enabled, modify the address to CN server
+    if (redirectToCNServer && !isDev) {
+        // Replace all international server addresses with CN server address
+        if (result.fields.address != NULL) {
+            System_String_o *cnAddress = u"cn.actual.battlenet.com.cn"_SS;
+            result.fields.address = cnAddress;
+            LOGI("Server redirected to CN: %s", SS_to_cstr(cnAddress));
+        }
+    }
+    
+    return result;
+}
+
 void reload_features() {
     if (g_vm == NULL)
     {
@@ -600,6 +621,10 @@ void Changes(JNIEnv *env, jclass clazz, jobject obj, jint featNum, jstring featN
         break;
     case 10:
         diamond = static_cast<CardState>(value);
+        break;
+    case 20:
+        redirectToCNServer = boolean;
+        LOGI("CN Server Redirect: %s", boolean ? "Enabled" : "Disabled");
         break;
     case 21:
         signature = static_cast<CardState>(value);
@@ -798,6 +823,8 @@ void hack_thread() {
     HOOK(targetLibName, Network_GetPlatformBuilder_Offset, Network_GetPlatformBuilder, il2cpp::Network_GetPlatformBuilder);
 
     HOOK(targetLibName, UpdateUtils_OpenAppStore_Offset, UpdateUtils_OpenAppStore, il2cpp::UpdateUtils_OpenAppStore);
+
+    HOOK(targetLibName, DeviceLocaleHelper_GetConnectionDataFromRegionId_Offset, DeviceLocaleHelper_GetConnectionDataFromRegionId, il2cpp::DeviceLocaleHelper_GetConnectionDataFromRegionId);
 
     HOOK(targetLibName, Localization_SetPegLocaleName_Offset, Localization_SetPegLocaleName, il2cpp::Localization_SetPegLocaleName);
 
