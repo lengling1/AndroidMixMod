@@ -198,6 +198,8 @@ namespace il2cpp {
 
     bool (*UpdateUtils_OpenAppStore)();
 
+    DeviceLocaleData_ConnectionData_o (*DeviceLocaleHelper_GetConnectionDataFromRegionId)(int region, bool isDev);
+
     void (*UnityEngine_Application_OpenURL)(System_String_o *url);
 
     System_String_o *(*Localization_GetLocaleName)();
