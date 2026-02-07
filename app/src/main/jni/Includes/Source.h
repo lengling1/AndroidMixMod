@@ -11,6 +11,9 @@ typedef char16_t Il2CppChar;
 typedef uint16_t Il2CppChar;
 #endif
 
+// Forward declarations for il2cpp types
+struct System_String_o;
+
 enum class OSCategory {
     PC = 1,
     Mac,
@@ -50,6 +53,18 @@ enum class DevicePreset {
     PC,
     Mac,
     Custom
+};
+
+// Forward declaration for DeviceLocaleData::ConnectionData struct
+struct DeviceLocaleData_ConnectionData_o {
+    struct DeviceLocaleData_ConnectionData_Fields {
+        System_String_o* address;
+        int32_t port;
+        System_String_o* version;
+        System_String_o* name;
+        uint32_t tutorialPort;
+        System_String_o* gameServerAddress;
+    } fields;
 };
 
 namespace il2cpp {
